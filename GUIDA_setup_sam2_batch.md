@@ -30,6 +30,20 @@ Serve anche opencv (usato dal calcolo automatico del box/punti):
 
 pip install opencv-python-headless
 
+## 2bis\. In alternativa: PyTorch CPU-only (senza GPU)
+
+SAM2 gira anche senza GPU: funziona comunque, semplicemente più lento. Se la macchina non ha una GPU NVIDIA (o non volete installare CUDA), installate la build CPU-only invece del comando della sezione 2 — è anche un download molto più leggero:
+
+pip install torch torchvision \--index-url https\://download.pytorch.org/whl/cpu
+
+Verificate l'installazione:
+
+python3 \-c "import torch; print(torch.cuda.is\_available())"
+
+In questo caso è **normale** che stampi `False` — non è un errore, vuol dire solo che la build CPU-only funziona (non cerca nemmeno la GPU). Il resto della guida non cambia: PyTorch sceglie da solo CPU o GPU in base a cosa trova disponibile.
+
+Tempi di riferimento misurati su CPU con il modello "small" (pipeline completa, incluso il calcolo automatico del prompt): berretto 16 frame \~4m20s, cuffie 41 frame \~7m30s. Per un batch con molti oggetti i tempi si moltiplicano di conseguenza. Su CPU conviene preferire i checkpoint **"tiny"** o **"small"**: "large" è circa 8x più lento di "tiny", per un guadagno di qualità marginale rispetto a "small" sui nostri dati.
+
 ## 3\. Clonare e installare SAM 2
 
 git clone https\://github.com/facebookresearch/sam2.git
